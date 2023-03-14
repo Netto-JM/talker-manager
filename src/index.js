@@ -4,6 +4,10 @@ const app = express();
 app.use(express.json());
 
 const talkerServices = require('./talkerServices');
+const {
+  validateEmail,
+  validatePassword,
+} = require('./validations');
 
 const HTTP_OK_STATUS = 200;
 const PORT = process.env.PORT || '3001';
@@ -29,7 +33,7 @@ app.get('/talker/:id', async (_request, response) => {
   response.status(200).send(user);
 });
 
-app.post('/login', async (_request, response) => {
+app.post('/login', validateEmail, validatePassword, (_request, response) => {
   response.status(HTTP_OK_STATUS).send({
     token: talkerServices.generateRandomToken(),
   });
