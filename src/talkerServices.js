@@ -22,7 +22,23 @@ const getUserById = async (id) => {
     .find((user) => user.id === id);
 };
 
+const generateRandomChar = () => {
+  const isNumber = Math.random() < 0.5;
+  const isUpperCase = Math.random() < 0.5;
+  const randomCharCode = isNumber
+    ? Math.floor(Math.random() * 10) + 48
+    : Math.floor(Math.random() * 26) + (isUpperCase ? 65 : 97);
+  return String.fromCharCode(randomCharCode);
+};
+
+const generateRandomToken = () => {
+  const asterisks = '*'.repeat(16);
+  const randomToken = Array.from(asterisks, generateRandomChar).join('');
+  return randomToken;
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
+  generateRandomToken,
 };
