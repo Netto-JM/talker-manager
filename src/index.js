@@ -21,9 +21,11 @@ app.get('/talker', async (_request, response) => {
 app.get('/talker/:id', async (_request, response) => {
   const { id } = _request.params;
   const user = await talkerServices.getUserById(Number(id));
-  if (!user) return response.status(404).send({
-    message: 'Pessoa palestrante não encontrada'
-  });
+  if (!user) {
+    return response.status(404).send({
+      message: 'Pessoa palestrante não encontrada',
+    });
+  }
   response.status(200).send(user);
 });
 
