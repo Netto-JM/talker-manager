@@ -16,6 +16,13 @@ const getAllUsers = async () => {
   return talkerUsers;
 };
 
+const getUserById = async (id) => {
+  const talkerUsers = await readTalkerFile();
+  return talkerUsers
+    .find((user) => user.id === id);
+};
+
 module.exports = {
   getAllUsers,
+  getUserById,
 };
