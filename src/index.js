@@ -29,6 +29,12 @@ app.get('/talker/:id', async (_request, response) => {
   response.status(200).send(user);
 });
 
+app.post('/login', async (_request, response) => {
+  response.status(HTTP_OK_STATUS).send({
+    token: talkerServices.generateRandomToken(),
+  });
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
