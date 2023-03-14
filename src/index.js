@@ -18,6 +18,15 @@ app.get('/talker', async (_request, response) => {
   response.status(HTTP_OK_STATUS).send(talkerData);
 });
 
+app.get('/talker/:id', async (_request, response) => {
+  const { id } = _request.params;
+  const user = await talkerServices.getUserById(Number(id));
+  if (!user) return response.status(404).send({
+    message: 'Pessoa palestrante não encontrada'
+  });
+  response.status(200).send(user);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
