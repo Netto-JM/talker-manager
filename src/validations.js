@@ -8,6 +8,12 @@ const checkEmailValidation = (email) => {
 
 const checkStringLength = (string, length) => (string.length >= length);
 
+const checkIntegerRange = (integer, minLength, maxLength = Infinity) => {
+  const isValidTypeRate = Number.isInteger(integer);
+  const isValidRangeRate = integer >= minLength && integer <= maxLength;
+  return isValidTypeRate && isValidRangeRate;
+};
+
 const validateEmail = (request, response, next) => {
   const hasEmail = Object.prototype.hasOwnProperty.call(request.body, 'email');
   if (!hasEmail) {
@@ -83,13 +89,6 @@ const validateName = (request, response, next) => {
   next();
 };
 
-const checkAgeValidation = (age) => {
-  const VALID_MIN_AGE = 18;
-  const isValidTypeAge = Number.isInteger(age);
-  const isOldEnoughAge = age >= VALID_MIN_AGE;
-  return isValidTypeAge && isOldEnoughAge;
-};
-
 const validateAge = (request, response, next) => {
   const hasAge = Object.prototype.hasOwnProperty.call(request.body, 'age');
   if (!hasAge) {
@@ -98,7 +97,7 @@ const validateAge = (request, response, next) => {
     });
   }
 
-  const isValidAge = checkAgeValidation(request.body.age);
+  const isValidAge = checkIntegerRange(request.body.age, 18);
   if (!isValidAge) {
     return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O campo "age" deve ser um número inteiro igual ou maior que 18',
@@ -133,14 +132,6 @@ const validateWatchedAt = (talk) => {
   return { isValideWatchedAt: true };
 };
 
-const checkRateValidation = (rate) => {
-  const VALID_MIN_RATE = 1;
-  const VALID_MAX_RATE = 5;
-  const isValidTypeRate = Number.isInteger(rate);
-  const isValidRangeRate = rate >= VALID_MIN_RATE && rate <= VALID_MAX_RATE;
-  return isValidTypeRate && isValidRangeRate;
-};
-
 const validateRate = (talk) => {
   const hasRate = Object.prototype.hasOwnProperty.call(talk, 'rate');
   if (!hasRate) {
@@ -150,7 +141,7 @@ const validateRate = (talk) => {
     };
   }
 
-  const isValidRate = checkRateValidation(talk.rate);
+  const isValidRate = checkIntegerRange(talk.rate, 1, 5);
   if (!isValidRate) {
       return {
       isValideRate: false,
