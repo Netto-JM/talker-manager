@@ -1,17 +1,17 @@
 const HTTP_BAD_REQUEST_STATUS = 400;
 const HTTP_UNAUTHORIZED_STATUS = 401;
 
-const checkEmailValidation = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
-
 const checkStringLength = (string, length) => (string.length >= length);
 
 const checkIntegerRange = (integer, minLength, maxLength = Infinity) => {
   const isValidTypeRate = Number.isInteger(integer);
   const isValidRangeRate = integer >= minLength && integer <= maxLength;
   return isValidTypeRate && isValidRangeRate;
+};
+
+const checkEmailValidation = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 };
 
 const validateEmail = (request, response, next) => {
