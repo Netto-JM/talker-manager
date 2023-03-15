@@ -62,11 +62,6 @@ app.put('/talker/:id', ...talkValidation, async(request, response) => {
   response.status(HTTP_OK_STATUS).send(talkerUserWithId);
 });
 
-app.post('/talker', ...talkValidation, async (request, response) => {
-  const talkerUser = await talkerServices.editTalkerFile(request.body);
-  response.status(HTTP_CREATED_STATUS).send(talkerUser);
-});
-
 app.delete('/talker/:id', validateToken, async (request, response) => {
   const { id } = request.params;
   talkerServices.deleteTalkerUser(Number(id));
