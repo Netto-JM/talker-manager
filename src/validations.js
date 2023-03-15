@@ -75,9 +75,31 @@ const validateName = (request, response, next) => {
   next();
 };
 
+const validateAge = (request, response, next) => {
+  const hasAge = Object.prototype.hasOwnProperty.call(request.body, 'age');
+  if (!hasAge) {
+    return response.status(400).send({
+      message: 'O campo \'age\' é obrigatório',
+    });
+  }
+
+  const {age} = request.body
+  const VALID_MIN_AGE = 16
+  const isValidTypeAge = Number.isInteger(age);
+  const isOldEnoughAge = age >= VALID_MIN_AGE;
+  const isValidAge = isValidTypeAge && isOldEnoughAge;
+  if (!isValidAge) {
+    return response.status(400).send({
+      message: 'O campo \"age\" deve ser um número inteiro igual ou maior que 18',
+    });
+  }
+  next();
+};
+
 module.exports = {
   validateEmail,
   validatePassword,
   validateToken,
   validateName,
+  validateAge,
 };
