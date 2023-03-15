@@ -26,9 +26,15 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', async (_request, response) => {
-  const talkerData = await talkerServices.getAllUsers();
-  response.status(HTTP_OK_STATUS).send(talkerData);
+app.get('/talker/search', validateToken, async (request, response) => {
+  const { q: query } = request.query;
+  if (typeof query === 'undefined') return response.status(HTTP_OK_STATUS).send([]);
+  if (query.length === 0) {
+    const talkerData = await talkerServices.getAllUsers();
+    return response.status(HTTP_OK_STATUS).send(talkerData);
+  }
+  const talkerUsersByName = await talkerServices.getUsersByName(query);
+  response.status(HTTP_OK_STATUS).send(talkerUsersByName);
 });
 
 app.get('/talker/:id', async (request, response) => {
@@ -40,6 +46,11 @@ app.get('/talker/:id', async (request, response) => {
     });
   }
   response.status(HTTP_OK_STATUS).send(user);
+});
+
+app.get('/talker', async (_request, response) => {
+  const talkerData = await talkerServices.getAllUsers();
+  response.status(HTTP_OK_STATUS).send(talkerData);
 });
 
 app.post('/login', validateEmail, validatePassword, (_request, response) => {
