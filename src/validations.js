@@ -1,3 +1,6 @@
+const HTTP_BAD_REQUEST_STATUS = 400;
+const HTTP_UNAUTHORIZED_STATUS = 401;
+
 const checkEmailValidation = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -6,14 +9,14 @@ const checkEmailValidation = (email) => {
 const validateEmail = (request, response, next) => {
   const hasEmail = Object.prototype.hasOwnProperty.call(request.body, 'email');
   if (!hasEmail) {
-    return response.status(400).send({
+    return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O campo "email" é obrigatório',
     });
   }
 
   const isValidEmail = checkEmailValidation(request.body.email);
   if (!isValidEmail) {
-    return response.status(400).send({
+    return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O "email" deve ter o formato "email@email.com"',
     });
   }
@@ -23,7 +26,7 @@ const validateEmail = (request, response, next) => {
 const validatePassword = (request, response, next) => {
   const hasPassword = Object.prototype.hasOwnProperty.call(request.body, 'password');
   if (!hasPassword) {
-    return response.status(400).send({
+    return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O campo "password" é obrigatório',
     });
   }
@@ -31,7 +34,7 @@ const validatePassword = (request, response, next) => {
   const VALID_PASSWORD_LENGTH = 6;
   const isValidPassword = request.body.password.length >= VALID_PASSWORD_LENGTH;
   if (!isValidPassword) {
-    return response.status(400).send({
+    return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O "password" deve ter pelo menos 6 caracteres',
     });
   }
@@ -41,7 +44,7 @@ const validatePassword = (request, response, next) => {
 const validateToken = (request, response, next) => {
   const hasToken = Object.prototype.hasOwnProperty.call(request.headers, 'authorization');
   if (!hasToken) {
-    return response.status(401).send({
+    return response.status(HTTP_UNAUTHORIZED_STATUS).send({
       message: 'Token não encontrado',
     });
   }
@@ -52,7 +55,7 @@ const validateToken = (request, response, next) => {
   const isValidLengthToken = token.length === VALID_TOKEN_LENGTH;
   const isValidToken = isValidTypeToken && isValidLengthToken;
   if (!isValidToken) {
-    return response.status(401).send({
+    return response.status(HTTP_UNAUTHORIZED_STATUS).send({
       message: 'Token inválido',
     });
   }
@@ -62,7 +65,7 @@ const validateToken = (request, response, next) => {
 const validateName = (request, response, next) => {
   const hasName = Object.prototype.hasOwnProperty.call(request.body, 'name');
   if (!hasName) {
-    return response.status(400).send({
+    return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O campo "name" é obrigatório',
     });
   }
@@ -70,7 +73,7 @@ const validateName = (request, response, next) => {
   const MIN_NAME_LENGTH = 3;
   const isValidName = request.body.name.length >= MIN_NAME_LENGTH;
   if (!isValidName) {
-    return response.status(400).send({
+    return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O "name" deve ter pelo menos 3 caracteres',
     });
   }
@@ -87,14 +90,14 @@ const checkAgeValidation = (age) => {
 const validateAge = (request, response, next) => {
   const hasAge = Object.prototype.hasOwnProperty.call(request.body, 'age');
   if (!hasAge) {
-    return response.status(400).send({
+    return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O campo "age" é obrigatório',
     });
   }
 
   const isValidAge = checkAgeValidation(request.body.age);
   if (!isValidAge) {
-    return response.status(400).send({
+    return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O campo "age" deve ser um número inteiro igual ou maior que 18',
     });
   }
@@ -159,19 +162,19 @@ const validateRate = (talk) => {
 const validateTalk = (request, response, next) => {
   const hasTalk = Object.prototype.hasOwnProperty.call(request.body, 'talk');
   if (!hasTalk) {
-    return response.status(400).send({
+    return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O campo "talk" é obrigatório',
     });
   }
 
   const watchedAtValidation = validateWatchedAt(request.body.talk);
   if (!watchedAtValidation.isValideWatchedAt) {
-    return response.status(400).send(watchedAtValidation.payload);
+    return response.status(HTTP_BAD_REQUEST_STATUS).send(watchedAtValidation.payload);
   }
 
   const rateValidation = validateRate(request.body.talk);
   if (!rateValidation.isValideRate) {
-    return response.status(400).send(rateValidation.payload);
+    return response.status(HTTP_BAD_REQUEST_STATUS).send(rateValidation.payload);
   }
 
   next();

@@ -8,9 +8,16 @@ const {
   validateEmail,
   validatePassword,
   validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
 } = require('./validations');
 
+const talkValidation = [validateToken, validateName, validateAge, validateTalk];
+
 const HTTP_OK_STATUS = 200;
+const HTTP_CREATED_STATUS = 201;
+const HTTP_NOT_FOUND_STATUS = 404;
 const PORT = process.env.PORT || '3001';
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -27,11 +34,11 @@ app.get('/talker/:id', async (_request, response) => {
   const { id } = _request.params;
   const user = await talkerServices.getUserById(Number(id));
   if (!user) {
-    return response.status(404).send({
+    return response.status(HTTP_NOT_FOUND_STATUS).send({
       message: 'Pessoa palestrante não encontrada',
     });
   }
-  response.status(200).send(user);
+  response.status(HTTP_OK_STATUS).send(user);
 });
 
 app.post('/login', validateEmail, validatePassword, (_request, response) => {
@@ -40,8 +47,8 @@ app.post('/login', validateEmail, validatePassword, (_request, response) => {
   });
 });
 
-app.post('/talker', validateToken, (_request, response) => {
-  response.status(HTTP_OK_STATUS).send({
+app.post('/talker', ...talkValidation, (_request, response) => {
+  response.status(HTTP_CREATED_STATUS).send({
     message: 'ok',
   });
 });
