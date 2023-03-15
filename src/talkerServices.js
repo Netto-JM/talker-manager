@@ -17,10 +17,16 @@ const getNextIdValue = (talkerUsers) => {
   return nextIdValue;
 };
 
+const deleteUserById = (talkerUsers, id) => {
+  const userIndex = talkerUsers.findIndex((user) => user.id === id);
+  talkerUsers.splice(userIndex, 1);
+}
+
 const writeTalkerFile = async (newUser) => {
   const path = '/talker.json';
   try {
     const talkerUsers = await readTalkerFile();
+    if (newUser.id) deleteUserById(talkerUsers, newUser.id);
     const newUserWithId = {
       id: getNextIdValue(talkerUsers),
       ...newUser,
