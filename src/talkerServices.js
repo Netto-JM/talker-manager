@@ -11,6 +11,15 @@ const readTalkerFile = async () => {
   }
 };
 
+const writeTalkerFile = async (talkerUsers) => {
+  const path = '/talker.json';
+  try {
+    await fs.writeFile(join(__dirname, path), JSON.stringify(talkerUsers));
+  } catch (error) {
+    console.error(`Cannot write to the file: ${error}`);
+  }
+};
+
 const getNextIdValue = (talkerUsers) => {
   const lastUserId = talkerUsers[talkerUsers.length - 1].id;
   const nextIdValue = lastUserId + 1;
@@ -19,24 +28,25 @@ const getNextIdValue = (talkerUsers) => {
 
 const deleteUserById = (talkerUsers, id) => {
   const userIndex = talkerUsers.findIndex((user) => user.id === id);
-  talkerUsers.splice(userIndex, 1);
+  if (userIndex !== -1) talkerUsers.splice(userIndex, 1);
 }
 
-const writeTalkerFile = async (newUser) => {
-  const path = '/talker.json';
-  try {
-    const talkerUsers = await readTalkerFile();
-    if (newUser.id) deleteUserById(talkerUsers, newUser.id);
-    const newUserWithId = {
-      id: getNextIdValue(talkerUsers),
-      ...newUser,
-    };
-    talkerUsers.push(newUserWithId);
-    await fs.writeFile(join(__dirname, path), JSON.stringify(talkerUsers));
-    return newUserWithId;
-  } catch (error) {
-    console.error(`Cannot write to the file: ${error}`);
-  }
+const deleteTalkerUser = async (id) => {
+  const talkerUsers = await readTalkerFile();
+  deleteUserById(talkerUsers, id);
+  writeTalkerFile(talkerUsers);
+}
+
+const editTalkerFile = async (newUser) => {
+  const talkerUsers = await readTalkerFile();
+  if (newUser.id) deleteUserById(talkerUsers, newUser.id);
+  const newUserWithId = {
+    id: getNextIdValue(talkerUsers),
+    ...newUser,
+  };
+  talkerUsers.push(newUserWithId);
+  writeTalkerFile(talkerUsers);
+  return newUserWithId;
 };
 
 const getAllUsers = async () => {
@@ -69,5 +79,6 @@ module.exports = {
   getAllUsers,
   getUserById,
   generateRandomToken,
-  writeTalkerFile,
+  editTalkerFile,
+  deleteTalkerUser,
 };
