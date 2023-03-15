@@ -29,13 +29,13 @@ const getNextIdValue = (talkerUsers) => {
 const deleteUserById = (talkerUsers, id) => {
   const userIndex = talkerUsers.findIndex((user) => user.id === id);
   if (userIndex !== -1) talkerUsers.splice(userIndex, 1);
-}
+};
 
 const deleteTalkerUser = async (id) => {
   const talkerUsers = await readTalkerFile();
   deleteUserById(talkerUsers, id);
   writeTalkerFile(talkerUsers);
-}
+};
 
 const editTalkerFile = async (newUser) => {
   const talkerUsers = await readTalkerFile();

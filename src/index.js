@@ -48,7 +48,7 @@ app.post('/login', validateEmail, validatePassword, (_request, response) => {
   });
 });
 
-app.put('/talker/:id', ...talkValidation, async(request, response) => {
+app.put('/talker/:id', ...talkValidation, async (request, response) => {
   const { id } = request.params;
   const user = await talkerServices.getUserById(Number(id));
   if (!user) {
@@ -57,7 +57,7 @@ app.put('/talker/:id', ...talkValidation, async(request, response) => {
     });
   }
   const userToEdit = request.body;
-  const talkerUserWithId = {id: Number(id), ...userToEdit};
+  const talkerUserWithId = { id: Number(id), ...userToEdit };
   talkerServices.editTalkerFile(talkerUserWithId);
   response.status(HTTP_OK_STATUS).send(talkerUserWithId);
 });
