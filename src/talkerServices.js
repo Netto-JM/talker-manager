@@ -11,6 +11,28 @@ const readTalkerFile = async () => {
   }
 };
 
+const getNextIdValue = (talkerUsers) => {
+  const lastUserId = talkerUsers[talkerUsers.length - 1].id;
+  const nextIdValue = lastUserId + 1;
+  return nextIdValue;
+};
+
+const writeTalkerFile = async (newUser) => {
+  const path = '/talker.json';
+  try {
+    const talkerUsers = await readTalkerFile();
+    const newUserWithId = {
+      id: getNextIdValue(talkerUsers),
+      ...newUser,
+    };
+    talkerUsers.push(newUserWithId);
+    await fs.writeFile(join(__dirname, path), JSON.stringify(talkerUsers));
+    return newUserWithId;
+  } catch (error) {
+    console.error(`Cannot write to the file: ${error}`);
+  }
+};
+
 const getAllUsers = async () => {
   const talkerUsers = await readTalkerFile();
   return talkerUsers;
@@ -41,4 +63,5 @@ module.exports = {
   getAllUsers,
   getUserById,
   generateRandomToken,
+  writeTalkerFile,
 };
