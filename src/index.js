@@ -7,6 +7,7 @@ const talkerServices = require('./talkerServices');
 const {
   validateEmail,
   validatePassword,
+  validateToken,
 } = require('./validations');
 
 const HTTP_OK_STATUS = 200;
@@ -36,6 +37,12 @@ app.get('/talker/:id', async (_request, response) => {
 app.post('/login', validateEmail, validatePassword, (_request, response) => {
   response.status(HTTP_OK_STATUS).send({
     token: talkerServices.generateRandomToken(),
+  });
+});
+
+app.post('/talker', validateToken, (_request, response) => {
+  response.status(HTTP_OK_STATUS).send({
+    message: 'ok',
   });
 });
 

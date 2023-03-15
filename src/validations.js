@@ -26,7 +26,7 @@ const validatePassword = (request, response, next) => {
     });
   }
 
-  const VALID_PASSWORD_LENGTH = 6
+  const VALID_PASSWORD_LENGTH = 6;
   const isValidPassword = request.body.password.length >= VALID_PASSWORD_LENGTH;
   if (!isValidPassword) {
     return response.status(400).send({
@@ -44,10 +44,10 @@ const validateToken = (request, response, next) => {
     });
   }
 
-  const {authorization: token} = request.headers
-  const VALID_TOKEN_LENGTH = 16
+  const { authorization: token } = request.headers;
+  const VALID_TOKEN_LENGTH = 16;
   const isValidTypeToken = typeof (token) === 'string';
-  const isValidLengthToken = token.length === VALID_TOKEN_LENGTH
+  const isValidLengthToken = token.length === VALID_TOKEN_LENGTH;
   const isValidToken = isValidTypeToken && isValidLengthToken;
   if (!isValidToken) {
     return response.status(401).send({
@@ -65,7 +65,7 @@ const validateName = (request, response, next) => {
     });
   }
 
-  const VALID_NAME_LENGTH = 16
+  const VALID_NAME_LENGTH = 16;
   const isValidName = request.body.name.length >= VALID_NAME_LENGTH;
   if (!isValidName) {
     return response.status(400).send({
@@ -83,14 +83,14 @@ const validateAge = (request, response, next) => {
     });
   }
 
-  const {age} = request.body
-  const VALID_MIN_AGE = 16
+  const { age } = request.body;
+  const VALID_MIN_AGE = 16;
   const isValidTypeAge = Number.isInteger(age);
   const isOldEnoughAge = age >= VALID_MIN_AGE;
   const isValidAge = isValidTypeAge && isOldEnoughAge;
   if (!isValidAge) {
     return response.status(400).send({
-      message: 'O campo \"age\" deve ser um número inteiro igual ou maior que 18',
+      message: 'O campo "age" deve ser um número inteiro igual ou maior que 18',
     });
   }
   next();
