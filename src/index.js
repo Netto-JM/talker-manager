@@ -47,6 +47,20 @@ app.post('/login', validateEmail, validatePassword, (_request, response) => {
   });
 });
 
+app.put('/talker/:id', ...talkValidation, async(request, response) => {
+  const { id } = request.params;
+  const user = await talkerServices.getUserById(Number(id));
+  if (!user) {
+    return response.status(HTTP_NOT_FOUND_STATUS).send({
+      message: 'Pessoa palestrante não encontrada',
+    });
+  }
+  const userToEdit = request.body;
+  const talkerUserWithId = {id: Number(id), ...userToEdit};
+  talkerServices.writeTalkerFile(talkerUserWithId);
+  response.status(HTTP_OK_STATUS).send(talkerUserWithId);
+});
+
 app.post('/talker', ...talkValidation, async (request, response) => {
   const talkerUser = await talkerServices.writeTalkerFile(request.body);
   response.status(HTTP_CREATED_STATUS).send(talkerUser);
