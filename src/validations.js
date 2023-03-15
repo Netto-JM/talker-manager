@@ -26,7 +26,8 @@ const validatePassword = (request, response, next) => {
     });
   }
 
-  const isValidPassword = request.body.password.length >= 6;
+  const VALID_PASSWORD_LENGTH = 6
+  const isValidPassword = request.body.password.length >= VALID_PASSWORD_LENGTH;
   if (!isValidPassword) {
     return response.status(400).send({
       message: 'O \'password\' deve ter pelo menos 6 caracteres',
@@ -56,8 +57,27 @@ const validateToken = (request, response, next) => {
   next();
 };
 
+const validateName = (request, response, next) => {
+  const hasName = Object.prototype.hasOwnProperty.call(request.body, 'name');
+  if (!hasName) {
+    return response.status(400).send({
+      message: 'O campo \'name\' é obrigatório',
+    });
+  }
+
+  const VALID_NAME_LENGTH = 16
+  const isValidName = request.body.name.length >= VALID_NAME_LENGTH;
+  if (!isValidName) {
+    return response.status(400).send({
+      message: 'O \'name\' deve ter pelo menos 3 caracteres',
+    });
+  }
+  next();
+};
+
 module.exports = {
   validateEmail,
   validatePassword,
   validateToken,
+  validateName,
 };
