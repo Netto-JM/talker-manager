@@ -7,7 +7,7 @@ const readTalkerFile = async () => {
     const contentFile = await fs.readFile(join(__dirname, path), 'utf-8');
     return JSON.parse(contentFile);
   } catch (error) {
-    return console.error(`Cannot read the file: ${error}`);;
+    return console.error(`Cannot read the file: ${error}`);
   }
 };
 
