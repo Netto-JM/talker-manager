@@ -17,6 +17,7 @@ const talkValidation = [validateToken, validateName, validateAge, validateTalk];
 
 const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
+const HTTP_NO_CONTENT_STATUS = 204;
 const HTTP_NOT_FOUND_STATUS = 404;
 const PORT = process.env.PORT || '3001';
 
@@ -57,12 +58,23 @@ app.put('/talker/:id', ...talkValidation, async(request, response) => {
   }
   const userToEdit = request.body;
   const talkerUserWithId = {id: Number(id), ...userToEdit};
-  talkerServices.writeTalkerFile(talkerUserWithId);
+  talkerServices.editTalkerFile(talkerUserWithId);
   response.status(HTTP_OK_STATUS).send(talkerUserWithId);
 });
 
 app.post('/talker', ...talkValidation, async (request, response) => {
-  const talkerUser = await talkerServices.writeTalkerFile(request.body);
+  const talkerUser = await talkerServices.editTalkerFile(request.body);
+  response.status(HTTP_CREATED_STATUS).send(talkerUser);
+});
+
+app.delete('/talker/:id', validateToken, async (request, response) => {
+  const { id } = request.params;
+  talkerServices.deleteTalkerUser(Number(id));
+  response.status(HTTP_NO_CONTENT_STATUS).send();
+});
+
+app.post('/talker', ...talkValidation, async (request, response) => {
+  const talkerUser = await talkerServices.editTalkerFile(request.body);
   response.status(HTTP_CREATED_STATUS).send(talkerUser);
 });
 
