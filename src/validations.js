@@ -6,6 +6,8 @@ const checkEmailValidation = (email) => {
   return emailRegex.test(email);
 };
 
+const checkStringLength = (string, length) => (string.length >= length);
+
 const validateEmail = (request, response, next) => {
   const hasEmail = Object.prototype.hasOwnProperty.call(request.body, 'email');
   if (!hasEmail) {
@@ -31,14 +33,20 @@ const validatePassword = (request, response, next) => {
     });
   }
 
-  const VALID_PASSWORD_LENGTH = 6;
-  const isValidPassword = request.body.password.length >= VALID_PASSWORD_LENGTH;
+  const isValidPassword = checkStringLength(request.body.password, 6);
   if (!isValidPassword) {
     return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O "password" deve ter pelo menos 6 caracteres',
     });
   }
   next();
+};
+
+const checkTokenValidation = (token) => {
+  const VALID_TOKEN_LENGTH = 16;
+  const isValidTypeToken = typeof (token) === 'string';
+  const isValidLengthToken = token.length === VALID_TOKEN_LENGTH;
+  return isValidTypeToken && isValidLengthToken;
 };
 
 const validateToken = (request, response, next) => {
@@ -49,11 +57,7 @@ const validateToken = (request, response, next) => {
     });
   }
 
-  const { authorization: token } = request.headers;
-  const VALID_TOKEN_LENGTH = 16;
-  const isValidTypeToken = typeof (token) === 'string';
-  const isValidLengthToken = token.length === VALID_TOKEN_LENGTH;
-  const isValidToken = isValidTypeToken && isValidLengthToken;
+  const isValidToken = checkTokenValidation(request.headers.authorization);
   if (!isValidToken) {
     return response.status(HTTP_UNAUTHORIZED_STATUS).send({
       message: 'Token inválido',
@@ -70,8 +74,7 @@ const validateName = (request, response, next) => {
     });
   }
 
-  const MIN_NAME_LENGTH = 3;
-  const isValidName = request.body.name.length >= MIN_NAME_LENGTH;
+  const isValidName = checkStringLength(request.body.name, 3);
   if (!isValidName) {
     return response.status(HTTP_BAD_REQUEST_STATUS).send({
       message: 'O "name" deve ter pelo menos 3 caracteres',
