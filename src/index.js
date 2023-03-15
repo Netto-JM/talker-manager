@@ -30,8 +30,8 @@ app.get('/talker', async (_request, response) => {
   response.status(HTTP_OK_STATUS).send(talkerData);
 });
 
-app.get('/talker/:id', async (_request, response) => {
-  const { id } = _request.params;
+app.get('/talker/:id', async (request, response) => {
+  const { id } = request.params;
   const user = await talkerServices.getUserById(Number(id));
   if (!user) {
     return response.status(HTTP_NOT_FOUND_STATUS).send({
@@ -47,10 +47,9 @@ app.post('/login', validateEmail, validatePassword, (_request, response) => {
   });
 });
 
-app.post('/talker', ...talkValidation, (_request, response) => {
-  response.status(HTTP_CREATED_STATUS).send({
-    message: 'ok',
-  });
+app.post('/talker', ...talkValidation, async (request, response) => {
+  const talkerUser = await talkerServices.writeTalkerFile(request.body);
+  response.status(HTTP_CREATED_STATUS).send(talkerUser);
 });
 
 app.listen(PORT, () => {
