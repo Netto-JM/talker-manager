@@ -60,11 +60,13 @@ const getUserById = async (id) => {
     .find((user) => user.id === id);
 };
 
-const getUsersByName = async (name) => {
-  const talkerUsers = await readTalkerFile();
-  return talkerUsers
-    .filter((user) => user.name.includes(name));
-};
+const getUsersByName = async (name, talkerUsers) => (
+  talkerUsers.filter((user) => (!name) || (user.name.includes(name)))
+);
+
+const getUsersByRate = async (rate, talkerUsers) => (
+  talkerUsers.filter((user) => (!rate) || (user.talk.rate === +rate))
+);
 
 const generateRandomChar = () => {
   const isNumber = Math.random() < 0.5;
@@ -88,4 +90,5 @@ module.exports = {
   editTalkerFile,
   deleteTalkerUser,
   getUsersByName,
+  getUsersByRate,
 };
