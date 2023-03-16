@@ -1,3 +1,4 @@
+const HTTP_OK_STATUS = 200;
 const HTTP_BAD_REQUEST_STATUS = 400;
 const HTTP_UNAUTHORIZED_STATUS = 401;
 
@@ -153,6 +154,22 @@ const validateRate = (talk) => {
   return { isValideRate: true };
 };
 
+const validateQuery = (request, response, next) => {
+  const { q: query, rate } = request.query;
+  const noQuery = (typeof query === 'undefined');
+  const noRate = (typeof rate === 'undefined');
+  const noQueries = noQuery && noRate;
+  if (noQueries) return response.status(HTTP_OK_STATUS).send([]);
+  if (noRate) return next();
+  const isValidRate = checkIntegerRange(+request.query.rate, 1, 5);
+  if (!isValidRate) {
+    return response.status(HTTP_BAD_REQUEST_STATUS).send({
+      message: 'O campo "rate" deve ser um número inteiro entre 1 e 5',
+    });
+  }
+  next();
+};
+
 const validateTalk = (request, response, next) => {
   const hasTalk = Object.prototype.hasOwnProperty.call(request.body, 'talk');
   if (!hasTalk) {
@@ -181,4 +198,5 @@ module.exports = {
   validateName,
   validateAge,
   validateTalk,
+  validateQuery,
 };
