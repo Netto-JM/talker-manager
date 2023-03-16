@@ -11,6 +11,7 @@ const {
   validateName,
   validateAge,
   validateTalk,
+  validateQuery,
 } = require('./validations');
 
 const talkValidation = [validateToken, validateName, validateAge, validateTalk];
@@ -26,15 +27,12 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker/search', validateToken, async (request, response) => {
-  const { q: query } = request.query;
-  if (typeof query === 'undefined') return response.status(HTTP_OK_STATUS).send([]);
-  if (query.length === 0) {
-    const talkerData = await talkerServices.getAllUsers();
-    return response.status(HTTP_OK_STATUS).send(talkerData);
-  }
-  const talkerUsersByName = await talkerServices.getUsersByName(query);
-  response.status(HTTP_OK_STATUS).send(talkerUsersByName);
+app.get('/talker/search', validateToken, validateQuery, async (request, response) => {
+  const { q: query, rate } = request.query;
+  const talkerData = await talkerServices.getAllUsers();
+  const talkerUsersByName = await talkerServices.getUsersByName(query, talkerData);
+  const talkerUsersByRate = await talkerServices.getUsersByRate(rate, talkerUsersByName);
+  response.status(HTTP_OK_STATUS).send(talkerUsersByRate);
 });
 
 app.get('/talker/:id', async (request, response) => {
